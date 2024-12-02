@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Text;
 
-namespace AdventOfCode_2024;
+namespace AdventOfCode_2024.DayOne;
 
 /// <summary>
 /// Day 1: Historian Hysteria
