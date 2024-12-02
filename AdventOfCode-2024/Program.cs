@@ -21,11 +21,7 @@ public class Program
 
         using StreamReader reader = new(resources);
 
-        string? line = reader.ReadLine();
-        if (line is null)
-            throw new Exception($"Input file is empty: {resources}");
-
-        while (line != null)
+        while (reader.ReadLine() is {} line)
         {
             ReadOnlySpan<char> span = line.AsSpan();
             int lastSpace = line.LastIndexOf(" ", StringComparison.Ordinal);
@@ -39,7 +35,6 @@ public class Program
             {
                 throw new Exception("Failed to parse values", ex);
             }
-            line = reader.ReadLine();
         }
 
         if (left.Count != right.Count)
