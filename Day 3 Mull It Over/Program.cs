@@ -1,10 +1,14 @@
-﻿namespace AdventOfCode_2024.DayThree;
+﻿using static AdventOfCode_2024.DayThree.Program;
+
+namespace AdventOfCode_2024.DayThree;
 
 public class Program
 {
     private static readonly Dictionary<TokenType, char[]> _validSequences = new()
     {
         { TokenType.MulFunction, new []{'m','u','l','('} },
+        { TokenType.DoFunction, new []{'d','o','(',')'} },
+        { TokenType.DontFunction, new []{'d','o','n','t','(',')'} }
     };
 
 
@@ -32,15 +36,14 @@ public class Program
                     continue;
                 }
 
-                Pair? pair = Consume(span[currentIndex..], out int endValue);
-
-                currentIndex += endValue;
-                if (pair is null) 
-                    continue;
-
-                pairs.Add(pair);
-                Console.WriteLine($"Pair: {pair.ValueA} | {pair.ValueB}");
+                if (Consume(span[currentIndex..], out Pair pair, out int consumed))
+                {
+                    pairs.Add(pair);
+                    Console.WriteLine($"Pair: {pair.ValueA} | {pair.ValueB}");
+                }
+                currentIndex += consumed;
             }
+
         }
 
         int accumulator = 0;
@@ -52,90 +55,55 @@ public class Program
         Console.WriteLine($"\nFinal Accumulated Value: {accumulator}");
     }
 
-    private static Pair? Consume(ReadOnlySpan<char> candidate, out int endValue)
+    private static bool Consume(ReadOnlySpan<char> candidate, out Pair pair, out int consumed)
     {
-        endValue = 0;
+        consumed = 0;
+        pair = default;
 
-        int index = 0, valA = 0, valB = 0;
-        Span<char> digitBuffer = stackalloc char[4]; //Assume 4 digits is max
-
-        int mulSequenceLength = _validSequences[TokenType.MulFunction].Length;
-        var sequenceBuffer = candidate[..mulSequenceLength];
-
-        if (!SequenceMatches(sequenceBuffer, _validSequences[TokenType.MulFunction]))
+        if (!candidate.StartsWith(_validSequences[TokenType.MulFunction]))
         {
-            endValue++; // check next character up ("mm" case)
-            return null;
+            consumed++;
+            return false;
         }
 
-        if(!(candidate.Contains('(') && candidate.Contains(',') && candidate.Contains(')')))
+        consumed += _validSequences[TokenType.MulFunction].Length;
+        candidate = candidate[(consumed - 1)..]; // Off by one so the indexof '(' doesnt fail
+
+        int openParenIndex = candidate.IndexOf('(');
+        int separatorIndex = candidate.IndexOf(',');
+        int closeParenIndex = candidate.IndexOf(')');
+
+        //Sanity check if the symbols are in the right order and if they exist
+        if (openParenIndex == -1 || separatorIndex == -1 || closeParenIndex == -1 || openParenIndex > separatorIndex || separatorIndex > closeParenIndex)
         {
-            endValue++;
-            return null;
+            return false;
         }
 
-        if (candidate[mulSequenceLength - 1] != '(')
+        if (TryParseNumber(candidate[1..separatorIndex], out int valueA) && TryParseNumber(candidate[(separatorIndex + 1)..(closeParenIndex)], out int valueB))
         {
-            endValue += mulSequenceLength; // Only assume that the mulSequence was valid and nothing after
-            return null;
+            pair = new Pair(valueA, valueB);
+            consumed += closeParenIndex;
+            return true;
         }
 
-        endValue = mulSequenceLength;
-
-        sequenceBuffer = candidate[endValue..];
-        for (; index < sequenceBuffer.Length; index++)
-        {
-            if (char.IsDigit(sequenceBuffer[index]))
-            {
-                digitBuffer[index] = sequenceBuffer[index];
-            }
-            else if (sequenceBuffer[index] == ',')
-            {
-                valA = int.Parse(digitBuffer[..index]);
-                digitBuffer.Clear();
-                break;
-            }
-            else
-                return null;
-        }
-
-        endValue += index + 1;
-
-        sequenceBuffer = candidate[endValue..];
-        for (index = 0; index < sequenceBuffer.Length; index++)
-        {
-            if (char.IsDigit(sequenceBuffer[index]))
-            {
-                digitBuffer[index] = sequenceBuffer[index];
-            }
-            else if (sequenceBuffer[index] == ')')
-            {
-                valB = int.Parse(digitBuffer[..index]);
-                digitBuffer.Clear();
-                break;
-            }
-            else
-                return null;
-        }
-
-        endValue += index;
-        return new Pair(valA, valB);
+        return false;
     }
 
-    private static bool SequenceMatches(ReadOnlySpan<char> sequence, ReadOnlySpan<char> toMatch)
+    private static bool TryParseNumber(ReadOnlySpan<char> input, out int result)
     {
-        if (sequence.Length != toMatch.Length)
-            return false;
-        for (int i = 0; i < sequence.Length; i++)
+        result = 0;
+        for (int i = 0; i < input.Length; i++)
         {
-            if (sequence[i] != toMatch[i])
+            if (!char.IsDigit(input[i]))
                 return false;
+            // Fancy hack I found to convert a sequence of characters into an int
+            result = result * 10 + (input[i] - '0');
         }
-
         return true;
     }
 
-    public class Pair
+
+    public readonly struct Pair
     {
         public int ValueA { get; }
         public int ValueB { get; }
@@ -150,9 +118,8 @@ public class Program
     public enum TokenType
     {
         MulFunction,
-        OpenParen,
-        CloseParen,
-        ArgSeparator
+        DoFunction,
+        DontFunction
     }
 }
 
