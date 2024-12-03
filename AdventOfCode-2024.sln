@@ -5,12 +5,14 @@ VisualStudioVersion = 17.7.34009.444
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day 1 Historian Hysteria", "AdventOfCode-2024\Day 1 Historian Hysteria.csproj", "{CF05D38B-07AA-4D46-B074-28D582A7696C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day 2 Red-Nosed Reports", "Day 2\Day 2 Red-Nosed Reports.csproj", "{DB3CD218-6815-4260-8B3A-531DCC324BDC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Day 2 Red-Nosed Reports", "Day 2\Day 2 Red-Nosed Reports.csproj", "{DB3CD218-6815-4260-8B3A-531DCC324BDC}"
 	ProjectSection(ProjectDependencies) = postProject
 		{9B11D8C5-D3AB-48DB-A580-125D2F0ADB12} = {9B11D8C5-D3AB-48DB-A580-125D2F0ADB12}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{9B11D8C5-D3AB-48DB-A580-125D2F0ADB12}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{9B11D8C5-D3AB-48DB-A580-125D2F0ADB12}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day 3 Mull It Over", "Day 3 Mull It Over\Day 3 Mull It Over.csproj", "{BF814F44-7A43-4E18-B954-CABF747D1650}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +32,10 @@ Global
 		{9B11D8C5-D3AB-48DB-A580-125D2F0ADB12}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B11D8C5-D3AB-48DB-A580-125D2F0ADB12}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B11D8C5-D3AB-48DB-A580-125D2F0ADB12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF814F44-7A43-4E18-B954-CABF747D1650}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF814F44-7A43-4E18-B954-CABF747D1650}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF814F44-7A43-4E18-B954-CABF747D1650}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF814F44-7A43-4E18-B954-CABF747D1650}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
