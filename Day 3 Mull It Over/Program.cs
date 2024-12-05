@@ -4,7 +4,10 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        // PartOne();
+        //PartOne partOne = new();
+        //partOne.Run();
+        PartTwo partTwo = new();
+        partTwo.Run();
     }
 
 
